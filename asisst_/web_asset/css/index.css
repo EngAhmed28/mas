@@ -1,0 +1,33 @@
+.side-bar
+{
+		width: 88%;
+    margin-right: 10px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    padding: 17px 20px 4px 0px;
+}
+
+.side-bar ul li
+{
+   	background-color: #49a1ba;
+    margin-bottom: 4px;
+    border-radius: 5px;
+}
+.side-bar ul li:hover
+{
+    background-color: #ffffff;
+
+}
+.side-bar ul li a:hover
+{
+    color: #378ba5;
+}
+.side-bar ul li a
+{
+  color: #ffffff;
+}
+.side-bar ul li a .fa ,.side-bar ul .office-secs .fa
+{
+  margin-left: 20px;
+  color: #ffffff;
+}

@@ -1,0 +1,104 @@
+body {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+
+
+/*************/
+
+select.form-control.input-sm {
+    background: #00a1ff !important;
+    border: 0px !important;
+    border-radius: 0px !important;
+    color: #FFF !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+}
+
+.pagination>li>a,
+.pagination>li>span {
+    background: #00a1ff !important;
+    border: 0px !important;
+    border-radius: 0px !important;
+    color: #FFF !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #00a1ff!important;
+    color: #FFF!important;
+    font-size: 13px!important;
+    font-weight: 500!important;
+}
+
+tr.even {
+    background: #eee!important;
+    color: #000!important;
+    font-size: 13px!important;
+    font-weight: 500!important;
+}
+
+th.sorting,
+.sorting_asc {
+    font-weight: 500 !important;
+    border: 1px solid #fff !important;
+    color: #FFF;
+    border: 1px solid #93CE37;
+    border-bottom: 3px solid #9ED929;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#30b3ff+0,00a1ff+100 */
+    background: rgb(48, 179, 255);
+    /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(48, 179, 255, 1) 0%, rgba(0, 161, 255, 1) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(48, 179, 255, 1) 0%, rgba(0, 161, 255, 1) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(48, 179, 255, 1) 0%, rgba(0, 161, 255, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#30b3ff', endColorstr='#00a1ff', GradientType=0);
+    /* IE6-9 */
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+/*
+table#example {
+    border: 0px !important;
+}*/
+
+input.form-control.input-sm {
+   background-color: #eee;
+     border: 1px solid #eee !important;
+    border-radius: 0px !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+    margin-right: 15px;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+    background-color: #fff;
+    color: #1aabff;
+}
+
+#example_filter label:before {
+    display: none;
+    content: "بحث  : ";
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#example_filter label {
+    display: none;
+    content: "Search:";
+    color: transparent;
+    float: left;
+}
+div.dataTables_wrapper div.dataTables_paginate{
+    display: none;
+}
