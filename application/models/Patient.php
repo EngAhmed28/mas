@@ -785,7 +785,37 @@ $res=$query->result();
             return $data;
         }
     }
-    
-    
 
- }
+    public function select_report2($hospital_id,$inout,$date_from,$date_to,$dep_id,$doc_id){
+
+        $array = array('in/out'=>$inout,'out_date>='=>$date_from,'out_date<='=>$date_to,'doctor_id'=>$doc_id);
+        if($dep_id != 0)
+            $array['dep_id'] = $dep_id;
+        if($hospital_id != '')
+            $array['hospital_id'] = $hospital_id;
+
+        $DB1 = $this->load->database('kingdom', TRUE);
+
+        $DB1->select('operation.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality,transformation.to_dep');
+
+        $DB1->join('patient','patient.id=operation.petient_id','left');
+
+        $DB1->join('transformation','transformation.id=operation.transform','left');
+
+        $DB1->where($array);
+
+        $query = $DB1->get('operation');
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[$row->id_card][] = $row;
+                $data3[$row->a_name][$row->out_date][$row->dep_id][] = $row;
+            }
+            return $data3;
+        }
+        return false;
+    }
+
+
+
+}

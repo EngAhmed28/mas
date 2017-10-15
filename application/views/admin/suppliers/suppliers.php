@@ -1,11 +1,11 @@
 <div class="well bs-component">
-    
-<?php
 
+<?php
+$id = 0;
 if(!empty($result)){
     $id = $result['id'];
 }else{
-    $id = 0;
+
 
 }
 

@@ -1,15 +1,10 @@
 
   <script type="text/javascript" src="<?php echo base_url()?>asisst/lib/jquery.timepicker.js"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>asisst/lib/jquery.timepicker.css" />
-
   <script type="text/javascript" src="<?php echo base_url()?>asisst/lib/bootstrap-datepicker.js"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>asisst/lib/bootstrap-datepicker.css" />
-
   <script type="text/javascript" src="<?php echo base_url()?>asisst/lib/site.js"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>asisst/lib/site.css" />
-
-
-
 <style>
 .btn-mobileSelect-gen {
 display:none!important;
@@ -20,10 +15,7 @@ display:block!important;
 #depart_id{
     display:block!important;
 }
-
 </style>
-
-
     <ul class="breadcrumb pb30">
         <li><a href="<?php echo base_url().'dashboard' ?>"><i class="fa fa-home"></i> إدارة الحجوزات </a></li>
         <li class="active"><?php  echo $title; ?></li>
@@ -37,15 +29,13 @@ display:block!important;
 </span>
 <div class="well bs-component">
 <fieldset>
-
-
 <?php 
  if(isset($result) && $result !=null):
    echo    form_open_multipart('dashboard/update_patients_reservations/'.$result['id']); 
     
     $out['patient_national_id']=$result['patient_national_id'];
     $out['depart_id']=$result['depart_id'];
-    $out['reservations_time']=$result['reservations_time'];
+    $out['reservations_time']= date("h:i",$result['reservations_time']);
     $out['reservations_date']=date("Y-m-d",$result['reservations_date']);
     $out['doctor_id']=$result['doctor_id'];
     $out['notes']=$result['notes'];
@@ -70,15 +60,12 @@ display:block!important;
  
   endif;
  ?>
-
 <div class="col-xs-3">
 <div class="form-group">
   <label for="inputUser" class="control-label">تاريخ اليوم </label>
   <input type="date" name="reservations_date" id="reservations_date" value="<?php echo $out['reservations_date']?>" class="form-control" />
 </div>
 </div> 
-
-
 <div class="col-xs-3">
 <div class="form-group">
   <label for="inputUser" class="control-label">إخنر العيادة  </label>
@@ -92,7 +79,6 @@ display:block!important;
    </select>
 </div>
 </div> 
-
 <div class="col-xs-3" id="optionearea1">
 <div class="form-group">
   <label for="inputUser" class="control-label">الطبيب </label>
@@ -119,12 +105,6 @@ display:block!important;
         
 </div>
 </div> 
-
-
-
-
-
-
 <div class="col-xs-3">
 <div class="form-group">
   <label for="inputUser" class="control-label">رقم الهوية  </label>
@@ -132,57 +112,37 @@ display:block!important;
   class="form-control"  onkeyup="return name_chek($('#patient_national_id').val());" <?php echo $out['readonly'];?>  />
 </div>
 </div> 
-
-
 <div class="col-xs-3" id="optionearea11">
 <div class="form-group">
   <label for="inputUser" class="control-label">إسم المريض </label>
   <input type="text" name="patient_name" value="<?php echo $out['patient_name'] ;?>" class="form-control" <?php echo $out['readonly'];?> />
 </div>
-
-<div class="form-group">
-  <label for="inputUser" class="control-label">رقم الهاتف </label>
-  <input type="text" name="tele" value="<?php echo $out['tele'] ;?>" class="form-control" <?php echo $out['readonly'];?> />
-
 </div>
-
-
-</div> 
-
-
-
-
+    <div class="col-xs-3">
+        <div class="form-group">
+            <label for="inputUser" class="control-label">رقم الهاتف </label>
+            <input type="text" name="tele" id="tele" value="<?php echo $out['tele'] ;?>" class="form-control" <?php echo $out['readonly'];?> />
+        </div>
+        </div>
 <div class="col-xs-3">
 <div class="form-group">
   <label for="inputUser" class="control-label">ملاحظات </label>
- <textarea name="notes" ><?php echo $out['notes'] ;?></textarea>
+ <textarea name="notes"  class="form-control"><?php echo $out['notes'] ;?></textarea>
 </div>
 </div> 
-
-
-
-
 <div class="form-group">
             <div class="col-xs-10 col-xs-pull-2">
                 <?php echo $out['input']?>
             </div>
 </div>
-
  <br /> <br /> <br /> <br /> <br />
  
         <article>
-           <!-- <div class="demo">
-              
-                <p><input id="basicExample" type="text" class="time" /></p>
-            </div>
--->
             <script>
                 $(function() {
                     $('#basicExample').timepicker();
                 });
             </script>
-
-
         </article>
  
  
@@ -192,10 +152,7 @@ display:block!important;
  
   </fieldset>
    
-
 </div>
-
-
     <div class="row">
     	<div class="col-md-12">
             <div class="panel with-nav-tabs panel-default">
@@ -241,11 +198,10 @@ display:block!important;
   $query = $this->db->query('SELECT name FROM doctor WHERE id = '.$row->doctor_id);
 foreach ($query->result() as $doc)
 {?>
-  <td><?php echo $doc->name ?></td> 
-
+  <td><?php echo $doc->name ?></td>
 <?php }
   ?>
-    <td>
+        <td>
       <a href="<?php  echo base_url().'dashboard/update_patients_reservations/'.$row->id?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> تعديل</a>
       <a  href="<?php // echo base_url().'dashboard/delete_user_by_id/'.$user->user_id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
                 <i class="fa fa-trash"></i> حذف</a>
@@ -254,26 +210,15 @@ foreach ($query->result() as $doc)
 <?php endforeach;?>
     </tbody>
 </table>
-
 <?php
 	endif;
 ?>
-                        
-                        
-                        
-                        <!-------- end today --------->
+
                         
                         </div>
                         <div class="tab-pane fade" id="tab2default">
-                        
-                        <?php
-                      
-                        ?>
-                        
-                        
-                        
-                        
-                                               
+
+
 <?php
 	if(isset($all_reserved_after) && $all_reserved_after!=null):
 ?>
@@ -316,7 +261,6 @@ foreach ($query->result() as $doc)
 <?php endforeach;?>
     </tbody>
 </table>
-
 <?php
 	endif;
 ?>
@@ -329,16 +273,6 @@ foreach ($query->result() as $doc)
             </div>
         </div>
         </div>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -360,7 +294,6 @@ foreach ($query->result() as $doc)
             });
             return false;
  }
-
  function name_chek(nat_id){
     
      var id = nat_id;
@@ -378,7 +311,6 @@ foreach ($query->result() as $doc)
             });
             return false;
  }
-
 function time_chek(reservations_time,doctor_id,reservations_date){
     
             var dataString ='reservations_time='+reservations_time+"&doctor_id="+doctor_id+"&reservations_date="+reservations_date;
@@ -395,7 +327,7 @@ function time_chek(reservations_time,doctor_id,reservations_date){
             });
             return false;
  }
-
-
-
 </script>
+
+
+
