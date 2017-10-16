@@ -6,6 +6,7 @@
         <tr>
             <th width="2%">#</th>
             <th width="" class="text-right">إسم المريض</th>
+            <th width="" class="text-right"> التاريخ</th>
              <th width="" class="text-right">رقم الهاتف</th>
             <th width="" class="text-right">رقم الهوية</th>
             <th width="" class="text-right">الوقت</th>
@@ -16,6 +17,8 @@
     <tr>
     <td><?php echo $count++; ?></td>
     <td><?php echo $row->patient_name ?></td>
+ 
+    <td><?php echo date('Y/m/d',$row->reservations_date) ?></td>
         <td><?php echo $row->tele?></td>
     <td><?php echo $row->patient_national_id?></td>
     <td><?php

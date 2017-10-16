@@ -1,18 +1,10 @@
-<div class="well bs-component">
-
+<div class="well bs-component"> 
 <?php
-$id = 0;
-if(!empty($result)){
+if(isset($result))
     $id = $result['id'];
-}else{
-
-
-}
-
-
-
-echo form_open_multipart('Suppliers/add_supplier/'.$id);
-
+ else
+    $id = 0;
+echo form_open_multipart('Suppliers/add_supplier/'.$id.'');
 $code = $this->db->query('SELECT code FROM accounts_group WHERE from_id=
                   (SELECT id FROM accounts_group WHERE code=(SELECT code FROM settings WHERE id=1))
                   ORDER BY id DESC LIMIT 1');

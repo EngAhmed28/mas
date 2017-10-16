@@ -22,7 +22,7 @@
             <th class="text-right">التاريخ</th>
             <th class="text-right">القسم</th>
             <th class="text-right">العملية</th>
-            <th class="text-right">السعر</th>
+            <th class="text-right">السعر بعد الخصم</th>
             <th class="text-right">الكمية</th>
             <th class="text-right">الخصم</th>
         </tr>

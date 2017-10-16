@@ -37,13 +37,24 @@ unset($_SESSION['message']);
                     </select>
                 </div>
             </div>
+  <div class="col-md-3 ">
+                <div class="form-group">
+                <br />
+                  <button type="button"  name="report" class="btn btn-primary" onclick="return lood();">بحث</button>
+               </div></div> 
+
+
+
 
         </div>
-        <div class="form-group hidden-print"  >
+    <!--    <div class="form-group hidden-print"  >
             <div class="col-xs-8 col-xs-pull-4">
                 <button type="button"  name="report" class="btn btn-primary" onclick="return lood();">بحث</button>
             </div>
         </div>
+     
+     -->
+     
         <div class="row" id="optionearea1"></div>
 
 

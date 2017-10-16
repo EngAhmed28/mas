@@ -1,4 +1,22 @@
-<?php if(isset($records)&&$records!=null):?>
+<?php if(isset($records)&&$records!=null):
+
+ /*for($z = 0 ; $z < count($records) ; $z++){ 
+    
+ /*  echo '<pre/>';
+        print_r($records[$z]->id);
+          echo '<pre/>'; */
+    /*
+ echo $records[$z]->id  ;
+ }*/
+ /*echo '<pre/>';
+        print_r($records[13]);
+          echo '<pre/>';
+
+  echo $records[0];*/
+?>
+
+
+
 
           <div class="col-xs-12  visible-print ">
               <div class="col-xs-4">
@@ -6,7 +24,7 @@
                         <img src="<?php echo base_url();?>asisst/img/logo_sanad.png" />
                     </div>
                 <div class="col-xs-12">
-                    <h4>مجموعه بانوراما الطبية  </h4>
+                    <h4>مجموعه الماس الطبية  </h4>
                 </div>
                 
             </div>
@@ -32,35 +50,26 @@
         <thead>
 
         <tr>
+    <th class="text-center" colspan="10">إجمالي عدد الزيارات  <?php echo count($records) ?> زيارة </th>
+       </tr>
+        <tr>
 
             <th width="2%">#</th>
-
             <th  class="text-right">إسم العميل</th>
-
             <th class="text-right">التاريخ</th>
-
             <th class="text-right">القسم</th>
-
-
             <th class="text-right">العملية</th>
-
-
-
+             <th class="text-right">قام بالتسجيل</th>
             <th class="text-right">السعر</th>
             <th class="text-right">الكمية</th>
-
             <th class="text-right">الخصم</th>
-
             <th class="text-right">السعر بعد الخصم</th>
-
-
-
         </tr>
-
         </thead>
         <tbody>
         <?php 
         
+
         
         for($x = 0 ; $x < count($records) ; $x++){ 
             
@@ -74,6 +83,9 @@
         $ppaid = 0;
         $medical_other=0;
         $first_paid=0;
+        
+        
+
             
             ?>
        
@@ -146,11 +158,11 @@ echo '
       '.$operations[$records[key($records)][key($records[key($records)])][key($records[key($records)][key($records[key($records)])])][$z]->operation_id]->operation.'
       </td>
 
-<!--
+
       <td  data-title="">
       '.$publisher[$records[key($records)][key($records[key($records)])][key($records[key($records)][key($records[key($records)])])][$z]->publisher]->user_username.'
       </td>
--->
+
       <td  data-title="">
       '.$records[key($records)][key($records[key($records)])][key($records[key($records)][key($records[key($records)])])][$z]->operation_price.'
       </td>

@@ -618,6 +618,173 @@ public  function records_select_user(){
         
 
     }
+ //---------------------- 15-10-2017 ---------------------------
+    public  function all_doctors_in($arr){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where($arr);
+        $DB1->group_by("re_doc_id");
+        $parent = $DB1->get();
+        $categories = $parent->result();
+        $i=0;
+        foreach($categories as $p_cat){
+            $categories[$i]->doc_detals_paid = $this->fatora_doc($p_cat->re_doc_id,$arr );
+            $categories[$i]->doc_detals_num = $this->doc_detals_num($p_cat->re_doc_id,$arr );
+            $categories[$i]->doc_detals_name = $this->doc_detals_name($p_cat->re_doc_id );
+
+            $i++;
+        }
+        return $categories;
+    }
+//----------------------------------------------------------------
+   public function fatora_doc($re_doc_id,$arr){
+       $DB1 = $this->load->database('kingdom', TRUE);
+       $DB1->select("*");
+       $DB1->from("operation");
+       $DB1->where("hospital_id",2);
+       $DB1->where($arr);
+       $DB1->where("re_doc_id",$re_doc_id);
+       $DB1->group_by("fatora_num");
+       $parent = $DB1->get();
+       $categories = $parent->result();
+
+       $total_pay=0;
+       foreach($categories as $p_cat){
+           $total_pay += $this->sum_fatora($p_cat->fatora_num );
+
+       }
+       return $total_pay;
+
+   }
+//----------------------------------------------------------------
+    public function  sum_fatora($fatora_num){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("payment");
+        $DB1->where("hospital_id",2);
+        $DB1->where("fatora_num",$fatora_num);
+        $query = $DB1->get();
+        $total_pay=0;
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $total_pay += $row->paid;
+            }
+            return $total_pay;
+        }
+        return 0;
+    }
+
+//----------------------------------------------------------------
+    public function doc_detals_paid($re_doc_id,$arr){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where($arr);
+        $DB1->where("re_doc_id",$re_doc_id);
+        $query = $DB1->get();
+        $total_pay=0;
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $total_pay += $row->paid;
+            }
+            return $total_pay;
+        }
+        return 0;
+    }
+//-------------------------------------------------------------------
+    public function doc_detals_num($re_doc_id,$arr){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where($arr);
+        $DB1->where("re_doc_id",$re_doc_id);
+        $DB1->group_by("petient_id");
+        $query = $DB1->get();
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        }
+        return 0;
+    }
+//-----------------------------------------------------------------
+    public  function doc_detals_name($re_doc_id){
+        $h = $this->db->get_where("doctor", array('id'=>$re_doc_id));
+        $arr= $h->row_array();
+        return $arr['name'];
+
+    }
+    //-----------------------------------------------------------------
+    public  function get_patient_name($petient_id){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $h = $DB1->get_where("patient", array('id'=>$petient_id));
+        $arr= $h->row_array();
+        return $arr['a_name'];
+
+    }
+//-------------------------------------------------------------------
+    public function one_doc_detals($arr){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where($arr);
+        $DB1->group_by("operation_date");
+        $parent = $DB1->get();
+        $categories = $parent->result();
+        $i=0;
+        foreach($categories as $p_cat){
+            $categories[$i]->patient_on_date = $this->patient_on_date($p_cat->re_doc_id, $p_cat->operation_date);
+            $i++;
+        }
+        return $categories;
+    }
+//----------------------------------------------------------
+    public  function patient_on_date($re_doc_id, $operation_date){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where("re_doc_id",$re_doc_id);
+        $DB1->where("operation_date",$operation_date);
+        $DB1->group_by("petient_id");
+        $parent = $DB1->get();
+        $categories = $parent->result();
+        $i=0;
+        foreach($categories as $p_cat){
+            $categories[$i]->patient_total_paid = $this->patient_on_date_sum($p_cat->petient_id,$p_cat->re_doc_id, $p_cat->operation_date);
+            $categories[$i]->patient_name = $this->get_patient_name($p_cat->petient_id);
+            $i++;
+        }
+        return $categories;
+    }
+//------------------------------------------------------------
+    public  function  patient_on_date_sum($petient_id,$re_doc_id,$operation_date){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where("hospital_id",2);
+        $DB1->where("petient_id",$petient_id);
+        $DB1->where("re_doc_id",$re_doc_id);
+        $DB1->where("operation_date",$operation_date);
+        $DB1->group_by("fatora_num");
+        $query = $DB1->get();
+        $total_pay=0;
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $total_pay += $this->sum_fatora($row->fatora_num);
+            }
+            return $total_pay;
+        }
+        return 0;
+    }
+
+
+
+
+    //---------------------- 15-10-2017 ---------------------------
 
 
 

@@ -15,6 +15,25 @@ display:block!important;
 #depart_id{
     display:block!important;
 }
+.bs-component {
+    padding: 10px 15px;
+}
+.table-bordered tbody tr td:first-child, .table-bordered tbody tr td:last-child {
+    border-left: 1px #192330 solid !important;
+    border-right: 0px #192330 solid !important;
+}
+.panel-body {
+     padding: 0px;
+}
+.table thead>tr>th {
+    background: #7da3ca;
+    color: #ECF0F1;
+    text-align: right;
+}
+.table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+
+    vertical-align: middle;
+}
 </style>
     <ul class="breadcrumb pb30">
         <li><a href="<?php echo base_url().'dashboard' ?>"><i class="fa fa-home"></i> إدارة الحجوزات </a></li>
@@ -60,13 +79,15 @@ display:block!important;
  
   endif;
  ?>
-<div class="col-xs-3">
+
+  <div class="col-sm-9 col-xs-12">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">تاريخ اليوم </label>
   <input type="date" name="reservations_date" id="reservations_date" value="<?php echo $out['reservations_date']?>" class="form-control" />
 </div>
 </div> 
-<div class="col-xs-3">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">إخنر العيادة  </label>
  
@@ -79,7 +100,7 @@ display:block!important;
    </select>
 </div>
 </div> 
-<div class="col-xs-3" id="optionearea1">
+<div class="col-md-4 col-sm-6 col-xs-12" id="optionearea1">
 <div class="form-group">
   <label for="inputUser" class="control-label">الطبيب </label>
 <?php if(isset($result) && $result !=null): ?>
@@ -96,7 +117,7 @@ display:block!important;
 <?php  endif;  ?>
 </div>
 </div> 
-<div class="col-xs-3">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">الوقت  </label>
  <input type="time" name="reservations_time" id="reservations_time" onchange="return time_chek($('#reservations_time').val() ,$('#doctor_id').val(),$('#reservations_date').val());" 
@@ -105,31 +126,58 @@ display:block!important;
         
 </div>
 </div> 
-<div class="col-xs-3">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">رقم الهوية  </label>
   <input type="number" name="patient_national_id" value="<?php echo $out['patient_national_id'] ?>" id="patient_national_id" 
   class="form-control"  onkeyup="return name_chek($('#patient_national_id').val());" <?php echo $out['readonly'];?>  />
 </div>
 </div> 
-<div class="col-xs-3" id="optionearea11">
+<div class="col-md-4 col-sm-6 col-xs-12" id="optionearea11">
 <div class="form-group">
   <label for="inputUser" class="control-label">إسم المريض </label>
   <input type="text" name="patient_name" value="<?php echo $out['patient_name'] ;?>" class="form-control" <?php echo $out['readonly'];?> />
 </div>
 </div>
-    <div class="col-xs-3">
+    <div class="col-md-4 col-sm-6 col-xs-12">
         <div class="form-group">
             <label for="inputUser" class="control-label">رقم الهاتف </label>
             <input type="text" name="tele" id="tele" value="<?php echo $out['tele'] ;?>" class="form-control" <?php echo $out['readonly'];?> />
         </div>
         </div>
-<div class="col-xs-3">
+<div class="col-md-8 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">ملاحظات </label>
  <textarea name="notes"  class="form-control"><?php echo $out['notes'] ;?></textarea>
 </div>
-</div> 
+</div>
+  </div>
+    <div class="col-sm-3 col-xs-12">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">
+                <h3 class="panel-title">حجوزات خلال اليوم  <?php echo date("Y-m-d",time()); ?></h3>
+            </div>
+            <div class="panel-body" style="height: 220px;overflow-y: scroll">
+               <table class="table  table-striped table-bordered" style="margin-bottom: 0px;max-height: 220px;">
+                   <thead>
+                   <th>إسم الطبيب</th>
+                   <th>التوقيت</th>
+                   </thead>
+                   <tbody> <tr>
+                   <?php $a=1; foreach ($all_reservs_bydoc as $view):?>
+                       <td rowspan="<?php echo sizeof($view->all_img)?>"><?php echo $view->patient_name ;?></td>
+                       <?php $a=1; foreach ($view->all_img as $row):?>
+                               <td> <?php echo date('h:ia',$row->reservations_time); ?></td>
+                               </tr>
+                           <?php endforeach;?>
+                   <?php endforeach;?>
+                   </tbody>
+               </table>
+            </div>
+        </div>
+    </div>
+
+
 <div class="form-group">
             <div class="col-xs-10 col-xs-pull-2">
                 <?php echo $out['input']?>
@@ -151,8 +199,9 @@ display:block!important;
   <?php  echo form_close()?>
  
   </fieldset>
-   
-</div>
+
+
+    </div>
     <div class="row">
     	<div class="col-md-12">
             <div class="panel with-nav-tabs panel-default">

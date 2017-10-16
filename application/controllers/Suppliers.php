@@ -95,7 +95,8 @@ class Suppliers extends CI_Controller
             redirect('Suppliers/add_supplier/0','refresh');
         }
         if($id != 0)
-         $data['result']=$this->Supplier->getById($id);
+            $data['result']=$this->Supplier->getById($id);
+            
         $data['table'] = $this->Supplier->select();
         $data['subview'] = 'admin/suppliers/suppliers';
         $data['title'] = 'الموردين';

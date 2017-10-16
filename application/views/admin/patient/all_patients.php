@@ -46,6 +46,12 @@
             </div>
     <table id="no-more-tables" class="table table-bordered" role="table" style="width: 100%;">
         <thead >
+        
+        <tr>
+    <th class="text-center" colspan="5">إجمالي عدد عملاء الماس  <?php echo sizeof($all_patient) ?> عميل </th>
+       </tr>
+        
+        
         <tr>
             <th width="%">#</th>
             <th  class="text-center">إسم العميل</th>

@@ -67,20 +67,14 @@ class Patient extends CI_Model
 
     public function select($hospital_id,$inout,$date,$dep_id){
         
-        if($date != ''){
+        if($date != '')
             $array = array('in/out'=>$inout,'operation_date'=>$date);
-        }else{
+        else
             $array = array('in/out'=>$inout);
-        }
-
-
-        if($dep_id != 0){
+        if($dep_id != 0)
             $array['dep_id'] = $dep_id;
-        }
-
-        if($hospital_id != ''){
+        if($hospital_id != '')
             $array['hospital_id'] = $hospital_id;
-        }
         
         $DB1 = $this->load->database('kingdom', TRUE);
         
@@ -207,9 +201,9 @@ class Patient extends CI_Model
         return false;
     }
     
-    public function select_report($hospital_id,$inout,$date_from,$date_to,$dep_id,$doc_id){
+    public function select_report($hospital_id,$inout,$date_from,$date_to,$dep_id){
         
-        $array = array('in/out'=>$inout,'out_date>='=>$date_from,'out_date<='=>$date_to,'doctor_id'=>$doc_id);
+        $array = array('in/out'=>$inout,'out_date>='=>$date_from,'out_date<='=>$date_to);
         if($dep_id != 0)
             $array['dep_id'] = $dep_id;
         if($hospital_id != '')
@@ -729,7 +723,39 @@ class Patient extends CI_Model
     }
     
     
+      public function select_mob($a_mob)
+    {
     
+       
+  
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $array = array('mobile'=>$a_mob);
+
+        $DB1->select('*');
+        $DB1->order_by('id','ASC');
+        $DB1->like('mobile',$a_mob);
+        //$this->db->like('title', $query, 'before');
+        $query = $DB1->get('patient');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+        
+        
+    } 
+    
+    
+    
+    
+    
+    
+    
+
+    
+     
     
     
        public function select_name($a_name)
@@ -768,53 +794,189 @@ $res=$query->result();
     $DB1->update('operation',$data);
     
    } 
-    
-    //--------------------------------------------------------------//
-    public function get_visits_beetween_dates_emp($from,$to,$emp)
-    {
-        $this->db->select('*');
-        $this->db->from('permits');
-        $this->db->where('date>=',$from);
-        $this->db->where('date <= ',$to);
-        $this->db->where('emp_code',$emp);
-        $query = $this->db->get();
+//------------------------15-10-2017------------------------------------------
+
+public function select_report2($hospital_id,$inout,$date_from,$date_to,$dep_id,$doc_id){
+    $array = array('in/out'=>$inout,'out_date>='=>$date_from,'out_date<='=>$date_to,'re_doc_id'=>$doc_id);
+    if($dep_id != 0)
+        $array['dep_id'] = $dep_id;
+    if($hospital_id != '')
+        $array['hospital_id'] = $hospital_id;
+
+    $DB1 = $this->load->database('kingdom', TRUE);
+
+    $DB1->select('operation.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality,transformation.to_dep');
+
+    $DB1->join('patient','patient.id=operation.petient_id','left');
+
+    $DB1->join('transformation','transformation.id=operation.transform','left');
+
+    $DB1->where($array);
+
+    $query = $DB1->get('operation');
+
+    if ($query->num_rows() > 0) {
+        foreach ($query->result() as $row) {
+            $data[$row->id_card][] = $row;
+            $data3[$row->a_name][$row->out_date][$row->dep_id][] = $row;
+        }
+        return $data3;
+    }
+    return false;
+}
+
+
+
+
+    public function payments($hospital_id){
+        
+        $DB1 = $this->load->database('kingdom', TRUE);
+        
+       // $array = array('id>='=>1);
+        if($hospital_id != '')
+            $array['hospital_id'] = $hospital_id;
+        
+        $DB1->select('payment.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality');
+        
+        $DB1->join('patient','patient.id=payment.patient_id','left');
+        $DB1->order_by('id','desc');
+        $DB1->where($array);
+        
+        $query = $DB1->get('payment');
+        
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $data[] = $row;
+               // $data3[$row->out_date][$row->a_name][] = $row->paid;
+                return $query->result();
+            }     
+            return $data3;            
+        }
+        return false;
+    }
+    
+    
+    
+    
+        public function fun_def_sum($hospital_id,$table,$field,$value)
+    {
+        
+        /*$this->db->select_sum('age');
+$query = $this->db->get('tbl_user');*/
+        
+        $DB1 = $this->load->database('kingdom', TRUE);
+        
+        $DB1->select_sum($field);
+        $array = array('hospital'=>$hospital_id);
+        $array = array($field=>$value);
+        
+        $DB1->where($array);
+        $query = $DB1->get($table);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[$row->id] = $row;
             }
             return $data;
         }
+        return false;
+    }    
+    
+    
+    
+    public function sum_($hospital_id,$table,$field)
+    {
+        
+          $DB1 = $this->load->database('kingdom', TRUE);
+       $array = array('hospital_id'=>$hospital_id);     
+     $DB1->select_sum($field);
+      $DB1->where($array);
+$result = $DB1->get($table)->row();  
+return $result->$field;
+        
+        
     }
 
-    public function select_report2($hospital_id,$inout,$date_from,$date_to,$dep_id,$doc_id){
-
-        $array = array('in/out'=>$inout,'out_date>='=>$date_from,'out_date<='=>$date_to,'doctor_id'=>$doc_id);
-        if($dep_id != 0)
-            $array['dep_id'] = $dep_id;
-        if($hospital_id != '')
-            $array['hospital_id'] = $hospital_id;
-
+    public function fun_def($hospital_id,$table,$field,$value)
+    {
         $DB1 = $this->load->database('kingdom', TRUE);
 
-        $DB1->select('operation.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality,transformation.to_dep');
-
-        $DB1->join('patient','patient.id=operation.petient_id','left');
-
-        $DB1->join('transformation','transformation.id=operation.transform','left');
+        $DB1->select('*');
+        $array = array('hospital'=>$hospital_id);
+        $array = array($field=>$value);
 
         $DB1->where($array);
+        $query = $DB1->get($table);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                // $data3[$row->out_date][$row->a_name][] = $row->paid;
+                return $query->result();
+            }
+            // return $data3;
+        }
+        return false;
+    }
+    
+    
+    //-------------------------------ahmed------------------//
 
-        $query = $DB1->get('operation');
+
+    public function fun_def_period($hospital_id,$table,$field,$value,$date_from,$date_to)
+    {
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select('*');
+        $array = array('hospital'=>$hospital_id);
+        $array = array($field=>$value,'out_date>='=>$date_from,'out_date<='=>$date_to);
+        $DB1->where($array);
+        $query = $DB1->get($table);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                // $data3[$row->out_date][$row->a_name][] = $row->paid;
+                return $query->result();
+            }
+            // return $data3;
+        }
+        return false;
+    }
+
+
+
+    public function sum_period($hospital_id,$table,$field,$date_from,$date_to)
+    {
+
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $array = array('hospital_id'=>$hospital_id,'out_date>='=>$date_from,'out_date<='=>$date_to);
+        $DB1->select_sum($field);
+        $DB1->where($array);
+        $result = $DB1->get($table)->row();
+        return $result->$field;
+
+
+    }
+
+
+
+    public function payments_period($hospital_id,$date_from,$date_to){
+
+        $DB1 = $this->load->database('kingdom', TRUE);
+        if($hospital_id != '')
+        $array = array('hospital_id'=>$hospital_id,'out_date>='=>$date_from,'out_date<='=>$date_to);
+        $DB1->select('payment.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality');
+
+        $DB1->join('patient','patient.id=payment.patient_id','left');
+        $DB1->order_by('id','desc');
+        $DB1->where($array);
+
+        $query = $DB1->get('payment');
 
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $data[$row->id_card][] = $row;
-                $data3[$row->a_name][$row->out_date][$row->dep_id][] = $row;
+                // $data3[$row->out_date][$row->a_name][] = $row->paid;
+                return $query->result();
             }
             return $data3;
         }
         return false;
     }
+
 
 
 

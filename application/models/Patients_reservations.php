@@ -144,7 +144,6 @@ public function update($id){
     }
 //---------------------------------------
 public function select(){
-    
         $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
         $this->db->from("patients_reservations");
         $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
@@ -159,15 +158,12 @@ public function select(){
         }
         return false;  
 }
-
-
-
 public function select_(){
     
         $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
         $this->db->from("patients_reservations");
         $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
-        $this->db->where("patients_reservations.reservations_date >",strtotime(date("Y-m-d",time())));
+        $this->db->where("patients_reservations.reservations_date < ",strtotime(date("Y-m-d",time())));
 		$this->db->order_by("id","DESC");
 		$query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -204,7 +200,7 @@ public function get_by_doc($doctor_id){
       $this->db->from('patients_reservations'); 
       $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
       $this->db->join('doctor', ' doctor.id = patients_reservations.doctor_id');
-        $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+      //  $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
 		$this->db->where("patients_reservations.doctor_id",$doctor_id);
         $this->db->order_by("id","DESC");
     $query = $this->db->get();
@@ -226,9 +222,42 @@ public function get_by_doc_ontime($doctor_id,$date_from,$date_to){
       $this->db->from('patients_reservations'); 
       $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
       $this->db->join('doctor', ' doctor.id = patients_reservations.doctor_id');
-        $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+       // $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
 		$this->db->where("patients_reservations.doctor_id",$doctor_id);
         $this->db->where("patients_reservations.reservations_date BETWEEN ".strtotime($date_from)." AND ".strtotime($date_to));
+        
+        
+        
+        
+        
+        $this->db->order_by("id","DESC");
+    $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;  
+    
+    
+}
+
+
+
+
+
+
+public function all_doc_reservations($doctor_id){
+      $this->db->select('patients_reservations.* ,
+                  patients.patient_national_id as pet_nat,patients.patient_name, patients.tele, 
+                  doctor.id as d_id,doctor.name as d_name');
+      $this->db->from('patients_reservations'); 
+      $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
+      $this->db->join('doctor', ' doctor.id = patients_reservations.doctor_id');
+       // $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+		$this->db->where("patients_reservations.doctor_id",$doctor_id);
+      //  $this->db->where("patients_reservations.reservations_date BETWEEN ".strtotime($date_from)." AND ".strtotime($date_to));
         
         
         
@@ -273,7 +302,92 @@ public function time_chek($reservations_time,$doctor_id,$reservations_date){
 }
 
 
+    public function delete_reservations($id){
+        $this->db->where('id',$id);
+        $this->db->delete('patients_reservations');
+
+    }
 
 
-    
+//=============================================================ahmed
+
+    public function select_all_reservs_byday(){
+        $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
+        $this->db->from("patients_reservations");
+        $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
+        $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+        $this->db->group_by("patients_reservations.doctor_id");
+        $this->db->order_by("id","DESC");
+        $query = $this->db->get();
+        $query_result=$query->result();
+        if ($query->num_rows() > 0) {
+            $i=0;
+            foreach ($query_result as $row) {
+                $query_result[$i]->all_img = $this->get_bydoc($row->doctor_id);
+                $i++;
+            }
+            return $query_result;
+        }
+        return false;
+
+
+
+    }
+
+    public function get_bydoc($doc){
+        $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
+        $this->db->from("patients_reservations");
+        $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
+        $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+        $this->db->where("patients_reservations.doctor_id",$doc);
+        $this->db->order_by("id","DESC");
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    //------------------------------------------------------------------------------------//
+    public function select_today_cases($doctor_id){
+        $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
+        $this->db->from("patients_reservations");
+        $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
+        $this->db->join('doctor', ' doctor.id = patients_reservations.doctor_id');
+        $this->db->where("patients_reservations.reservations_date",strtotime(date("Y-m-d",time())));
+        $this->db->where("patients_reservations.doctor_id",$doctor_id);
+        $this->db->order_by("id","DESC");
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    public function select_aftertoday_cases($doctor_id){
+
+        $this->db->select('patients_reservations.* , patients.patient_national_id as pet_nat,patients.patient_name,patients.tele');
+        $this->db->from("patients_reservations");
+        $this->db->join('patients', ' patients.patient_national_id = patients_reservations.patient_national_id');
+        $this->db->join('doctor', ' doctor.id = patients_reservations.doctor_id');
+        $this->db->where("patients_reservations.reservations_date > ",strtotime(date("Y-m-d",time())));
+        $this->db->where("patients_reservations.doctor_id",$doctor_id);
+        $this->db->order_by("id","DESC");
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+
+
+
 }// END CLASS
