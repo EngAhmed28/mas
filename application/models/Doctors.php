@@ -788,4 +788,31 @@ public  function records_select_user(){
 
 
 
+    //----------------------------------------------ahmed---------------//
+    public  function all_doctors_byday(){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $array = array('hospital_id'=>2,'operation_date'=>date("Y-m-d",time()));
+        $DB1->where($array);
+        $DB1->group_by("re_doc_id");
+        $parent = $DB1->get();
+        $categories = $parent->result();
+        $i=0;
+        foreach($categories as $p_cat){
+            $categories[$i]->doc_detals_paid = $this->fatora_doc($p_cat->re_doc_id,$array );
+            $categories[$i]->doc_detals_num = $this->doc_detals_num($p_cat->re_doc_id,$array );
+            $categories[$i]->doc_detals_name = $this->doc_detals_name($p_cat->re_doc_id );
+            $i++;
+        }
+        return $categories;
+    }
+
+
+
+    //-----------------------------------//
+
+
+
+
 }
