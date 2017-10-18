@@ -1,15 +1,6 @@
 
 
 
- <?
-
-
- echo'<pre>';
-
- var_dump($row->doc_detals_paid);
- echo'</pre>';
-
- ?>
  <?php if(isset($all_doctors) && !empty($all_doctors) && $all_doctors!=null){?>
     <?php $count_visit=0;$count_total=0 ; foreach ($all_doctors as $row):
         $count_visit +=$row->doc_detals_num;
@@ -94,6 +85,6 @@
 <?php }else{
 
     echo '<div class="alert alert-danger">
-  <strong>لا يوجد !</strong>حلات  خلال اليوم .
+  <strong>لا يوجد !</strong>حلات   .
 </div>';
 }?>

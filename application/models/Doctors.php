@@ -788,7 +788,7 @@ public  function records_select_user(){
 
 
 
-    //----------------------------------------------ahmed---------------//
+    //----------------------------------------------byday---------------//
     public  function all_doctors_byday($doctor_id){
         $DB1 = $this->load->database('kingdom', TRUE);
         $DB1->select("*");
@@ -803,18 +803,17 @@ public  function records_select_user(){
             $categories[$i]->doc_detals_paid = $this->fatora_doc($p_cat->re_doc_id,$arr );
             $categories[$i]->doc_detals_num = $this->doc_detals_num($p_cat->re_doc_id,$arr );
             $categories[$i]->doc_detals_name = $this->doc_detals_name($p_cat->re_doc_id );
-
+            $categories[$i]->patient_name = $this->get_patient_name($p_cat->petient_id);
             $i++;
         }
         //die;
         return $categories;
     }
 
-    //-----------------------------------//
+    //----------------------------------------------bymonth---------------//
     public  function all_doctors_bymonth(){
         $mon=date("m",time());
         $DB1 = $this->load->database('kingdom', TRUE);
-       // $DB1->SELECT('* FROM `operation` WHERE `hospital_id`=2 AND month(`operation_date`) ='.$mon.'');
         $arr =array('month(`operation_date`)'=>$mon);
         $DB1->select("*");
         $DB1->from("operation");
@@ -825,35 +824,26 @@ public  function records_select_user(){
         $parent = $DB1->get();
         $categories = $parent->result();
         $a=0;
-
-   /*     echo'<pre>';
-        var_dump($categories);
-        echo'</pre>';*/
-
         foreach($categories as $op){
             $categories[$a]->doc_detals_paid = $this->fatora_doc_bymonth($op->re_doc_id,$arr );
-    /*        echo'<pre>';
-            var_dump($this->go_for(9));
-            echo'</pre>';*/
           $categories[$a]->doc_detals_num = $this->doc_detals_num_bymonth($op->re_doc_id ,$arr);
           $categories[$a]->doc_detals_name = $this->doc_detals_name_bymonth($op->re_doc_id );
             $categories[$a]->patient_name = $this->get_patient_name($op->petient_id );
             $categories[$a]->doc_name = $this->doc_detals_name($op->re_doc_id);
             $a++;
         }
-       // die;
         return $categories;
     }
 
 
 
 
-    public function fatora_doc_bymonth($re_doc_id){
+    public function fatora_doc_bymonth($re_doc_id,$arr){
         $DB1 = $this->load->database('kingdom', TRUE);
         $DB1->select("*");
         $DB1->from("operation");
         $DB1->where("hospital_id",2);
-       // $DB1->where($arr);
+        $DB1->where($arr);
         $DB1->where("re_doc_id",$re_doc_id);
         $DB1->group_by("fatora_num");
         $parent = $DB1->get();

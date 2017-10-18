@@ -8,8 +8,8 @@
 </ul>
     
     <div class="something">
-         <label for="inputUser" class="control-label">البحث بالإسم   </label>
-     <input name="search_data" id="search_data" type="text"  placeholder="من فضلك أدخل الإسم الذي تريد البحث عنه" 
+         <label for="inputUser" class="control-label">البحث بالإسم/رقم الهاتف   </label>
+     <input name="search_data" id="search_data" type="text"  placeholder="من فضلك أدخل الإسم أو رقم الهاتف الذي تريد البحث عنه"
                 class="form-control text-right"  onkeyup="ajaxSearch();">
      <div id="suggestions">
          <div id="autoSuggestionsList"></div>
@@ -36,7 +36,7 @@ function ajaxSearch()
 
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url(); ?>/dashboard/autocomplete/",
+            url: "<?php echo base_url(); ?>/dashboard/patient_search/",
             data: post_data,
             success: function (data) {
                 // return success

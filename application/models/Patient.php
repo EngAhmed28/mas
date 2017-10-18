@@ -977,6 +977,29 @@ return $result->$field;
         return false;
     }
 
+//-----------------------------------------------ahmed---------------------------//
+
+    public function select_patients_by($condition){
+       $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select('*');
+        $DB1->where('hospital_id_fk',2);
+        $DB1->where('a_name',$condition);
+        $DB1->or_where('mobile',$condition);
+        $DB1->or_where('phone',$condition);
+        $query = $DB1->get('patient');
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+
+
+
 
 
 

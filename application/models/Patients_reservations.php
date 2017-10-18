@@ -118,7 +118,7 @@ public function update($id){
         $data['patient_national_id']=$this->chek_Null($this->input->post('patient_national_id'));
         $data['reservations_date']=strtotime($this->input->post('reservations_date'));
          $data['reservations_time']=strtotime($this->input->post('reservations_time'));
-        $data['reservations_time']=$this->input->post('reservations_time');
+        //$data['reservations_time']=$this->input->post('reservations_time');
         $data['depart_id']=$this->chek_Null($this->input->post('depart_id'));
         $data['doctor_id']=$this->chek_Null($this->input->post('doctor_id'));
         $data['notes']=$this->chek_Null($this->input->post('notes'));        

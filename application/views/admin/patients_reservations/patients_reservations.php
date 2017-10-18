@@ -158,6 +158,7 @@ display:block!important;
                 <h3 class="panel-title">حجوزات خلال اليوم  <?php echo date("Y-m-d",time()); ?></h3>
             </div>
             <div class="panel-body" style="height: 220px;overflow-y: scroll">
+                <?php if(!empty($all_reservs_bydoc)):?>
                <table class="table  table-striped table-bordered" style="margin-bottom: 0px;max-height: 220px;">
                    <thead>
                    <th>إسم الطبيب</th>
@@ -167,12 +168,13 @@ display:block!important;
                    <?php $a=1; foreach ($all_reservs_bydoc as $view):?>
                        <td rowspan="<?php echo sizeof($view->all_img)?>"><?php echo $view->patient_name ;?></td>
                        <?php $a=1; foreach ($view->all_img as $row):?>
-                               <td> <?php echo date('h:ia',$row->reservations_time); ?></td>
+                               <td> <?php echo date('h:i ',$row->reservations_time); ?></td>
                                </tr>
                            <?php endforeach;?>
                    <?php endforeach;?>
                    </tbody>
                </table>
+                <?php endif;?>
             </div>
         </div>
     </div>
@@ -241,7 +243,7 @@ display:block!important;
     <td><?php echo $row->patient_name ?></td>
     <td><?php echo $row->tele ?></td>
     <td><?php echo $row->patient_national_id?></td>
-    <td><?php echo date( "h:i A", $row->reservations_time)?></td>
+    <td><?php echo date( "h:ia", $row->reservations_time)?></td>
     
   <?php
   $query = $this->db->query('SELECT name FROM doctor WHERE id = '.$row->doctor_id);
@@ -252,7 +254,7 @@ foreach ($query->result() as $doc)
   ?>
         <td>
       <a href="<?php  echo base_url().'dashboard/update_patients_reservations/'.$row->id?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> تعديل</a>
-      <a  href="<?php // echo base_url().'dashboard/delete_user_by_id/'.$user->user_id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
+      <a  href="<?php  echo base_url().'dashboard/delete_reservations/'.$row->id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
                 <i class="fa fa-trash"></i> حذف</a>
     </td>
     </tr>
@@ -293,7 +295,7 @@ foreach ($query->result() as $doc)
     <td><?php echo $rows->patient_name ?></td>
         <td><?php echo $rows->tele?></td>
     <td><?php echo $rows->patient_national_id?></td>
-    <td><?php echo date( "h:i A", $row->reservations_time)?></td>
+    <td><?php echo date( "h:i a", $row->reservations_time)?></td>
       <?php
   $query = $this->db->query('SELECT name FROM doctor WHERE id = '.$rows->doctor_id);
 foreach ($query->result() as $doc)
