@@ -49,6 +49,7 @@ class Print_patient extends CI_Model
         $DB1->select('payment.*,patient.a_name');
         $DB1->from('payment');
         $DB1->join('patient','patient.id=payment.patient_id');
+        $DB1->where('payment.remain !=',0);
         $DB1->where($array);
         $DB1->order_by('id','ASC');
         $query = $DB1->get();
