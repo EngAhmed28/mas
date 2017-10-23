@@ -784,28 +784,29 @@ public  function records_select_user(){
 
 
 
-    //---------------------- 15-10-2017 ---------------------------
-
-
-
+    //---------------------- 19-10-2017 ---------------------------
+ 
     //----------------------------------------------byday---------------//
     public  function all_doctors_byday($doctor_id){
         $DB1 = $this->load->database('kingdom', TRUE);
+         $mon=date("m",time());
         $DB1->select("*");
         $DB1->from("operation");
-        $array = array('hospital_id'=>2,'operation_date'=>date("Y-m-d",time()),'re_doc_id'=>$doctor_id);
-        $arr=array('operation_date'=>date("Y-m-d",time()));
+        $array = array('hospital_id'=>2,'month(`operation_date`)'=>$mon,'re_doc_id'=>$doctor_id);
+        $arr=array('month(`operation_date`)'=>$mon);
         $DB1->where($array);
+        $DB1->group_by("fatora_num");
+        $DB1->order_by('date','DESC');
         $parent = $DB1->get();
         $categories = $parent->result();
         $i=0;
         foreach($categories as $p_cat){
-            $categories[$i]->doc_detals_paid = $this->fatora_doc($p_cat->re_doc_id,$arr );
+           $categories[$i]->doc_detals_paid = $this->sum_fatora($p_cat->fatora_num );
             $categories[$i]->doc_detals_num = $this->doc_detals_num($p_cat->re_doc_id,$arr );
             $categories[$i]->doc_detals_name = $this->doc_detals_name($p_cat->re_doc_id );
             $categories[$i]->patient_name = $this->get_patient_name($p_cat->petient_id);
             $i++;
-        }
+       }
         //die;
         return $categories;
     }
@@ -880,7 +881,31 @@ public  function records_select_user(){
 
     }
 
+//------------------------------------------------------------------------------
+ public  function all_doctors_byftra($doctor_id,$arr){
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select("*");
+        $DB1->from("operation");
+        $DB1->where($arr);
+        $DB1->where(array('hospital_id'=>2,'re_doc_id'=>$doctor_id));
+        $DB1->group_by("fatora_num");
+        $DB1->order_by('date','DESC');
+        $parent = $DB1->get();
+        $categories = $parent->result();
+        $i=0;
+        foreach($categories as $p_cat){
+           $categories[$i]->doc_detals_paid = $this->sum_fatora($p_cat->fatora_num );
+            $categories[$i]->doc_detals_num = $this->doc_detals_num($p_cat->re_doc_id,$arr );
+            $categories[$i]->doc_detals_name = $this->doc_detals_name($p_cat->re_doc_id );
+            $categories[$i]->patient_name = $this->get_patient_name($p_cat->petient_id);
+            $i++;
+       }
+        //die;
+        return $categories;
+    }
 
 
 
-}
+
+
+}//END CLASS

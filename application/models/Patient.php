@@ -894,32 +894,34 @@ return $result->$field;
         
         
     }
+    
+    
+    
 
-    public function fun_def($hospital_id,$table,$field,$value)
+    
+    
+        public function fun_def($hospital_id,$table,$field,$value)
     {
         $DB1 = $this->load->database('kingdom', TRUE);
-
+        
         $DB1->select('*');
         $array = array('hospital'=>$hospital_id);
         $array = array($field=>$value);
-
+        
         $DB1->where($array);
         $query = $DB1->get($table);
-        if ($query->num_rows() > 0) {
+       if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                // $data3[$row->out_date][$row->a_name][] = $row->paid;
+               // $data3[$row->out_date][$row->a_name][] = $row->paid;
                 return $query->result();
-            }
-            // return $data3;
+            }     
+           // return $data3;            
         }
         return false;
     }
-    
-    
-    //-------------------------------ahmed------------------//
+//------------------------- 17-10-2017  ----------------------------------------------
 
-
-    public function fun_def_period($hospital_id,$table,$field,$value,$date_from,$date_to)
+ public function fun_def_period($hospital_id,$table,$field,$value,$date_from,$date_to)
     {
         $DB1 = $this->load->database('kingdom', TRUE);
         $DB1->select('*');
@@ -936,10 +938,8 @@ return $result->$field;
         }
         return false;
     }
-
-
-
-    public function sum_period($hospital_id,$table,$field,$date_from,$date_to)
+    
+      public function sum_period($hospital_id,$table,$field,$date_from,$date_to)
     {
 
         $DB1 = $this->load->database('kingdom', TRUE);
@@ -951,8 +951,6 @@ return $result->$field;
 
 
     }
-
-
 
     public function payments_period($hospital_id,$date_from,$date_to){
 
@@ -977,22 +975,38 @@ return $result->$field;
         return false;
     }
 
-//-----------------------------------------------ahmed---------------------------//
 
-    public function select_patients_by($condition){
-       $DB1 = $this->load->database('kingdom', TRUE);
-        $DB1->select('*');
-        $DB1->where('hospital_id_fk',2);
-        $DB1->where('a_name',$condition);
-        $DB1->or_where('mobile',$condition);
-        $DB1->or_where('phone',$condition);
-        $query = $DB1->get('patient');
+/**********************************/
 
+public function select_patients_by($condition){
+    $DB1 = $this->load->database('kingdom', TRUE);
+    $DB1->select('*');
+    $DB1->where('hospital_id_fk',2);
+    $DB1->where('a_name',$condition);
+    $DB1->or_where('mobile',$condition);
+    $DB1->or_where('phone',$condition);
+    $query = $DB1->get('patient');
+
+    if ($query->num_rows() > 0) {
+        foreach ($query->result() as $row) {
+            $data[] = $row;
+        }
+        return $data;
+    }
+    return false;
+}
+/*******************************/
+
+    public function select_payments_by_type($array_condition){
+
+        $DB1 = $this->load->database('kingdom', TRUE);
+        $DB1->select('payment.*,patient.a_name,patient.id AS p_id,patient.id_card,patient.mobile,patient.birth_date,patient.nationality');
+        $DB1->join('patient','patient.id=payment.patient_id','left');
+        $DB1->order_by('id','desc');
+        $DB1->where($array_condition);
+        $query = $DB1->get('payment');
         if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row) {
-                $data[] = $row;
-            }
-            return $data;
+            return $query->result();
         }
         return false;
     }
@@ -1000,7 +1014,4 @@ return $result->$field;
 
 
 
-
-
-
-}
+ }// END CLASS 

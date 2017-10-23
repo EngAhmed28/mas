@@ -135,38 +135,44 @@ public  function get_opration_by_date($date_array,$hospital){
     return false;
 }
 
-    //----------------------------------------------------------------ahmed------------------//
-    public function select_fatora_bysearch($hospital_id,$patient_id){
-        $DB1 = $this->load->database('kingdom', TRUE);
-        $DB1->select('payment.* , patient.id as p_id,patient.a_name ,patient.id_card');
-        $DB1->from('payment');
-        $DB1->join('patient', ' patient.id = payment.patient_id');
-        $DB1->where("payment.hospital_id",$hospital_id);
-        $DB1->where("payment.patient_id",$patient_id);
-        $DB1->order_by('payment.id',"DESC");
-        $query = $DB1->get();
-        if($query->num_rows() != 0){
-            foreach ($query->result() as $row) {
-                $data[] = $row;
-            }
-            return $data;
+
+
+/******************************************************/
+
+
+public function select_fatora_bysearch($hospital_id,$patient_id){
+    $DB1 = $this->load->database('kingdom', TRUE);
+    $DB1->select('payment.* , patient.id as p_id,patient.a_name ,patient.id_card');
+    $DB1->from('payment');
+    $DB1->join('patient', ' patient.id = payment.patient_id');
+    $DB1->where("payment.hospital_id",$hospital_id);
+    $DB1->where("payment.patient_id",$patient_id);
+    $DB1->order_by('payment.id',"DESC");
+    $query = $DB1->get();
+    if($query->num_rows() != 0){
+        foreach ($query->result() as $row) {
+            $data[] = $row;
         }
-        return false;
+        return $data;
     }
+    return false;
+}
 
+// for_test
+public function update_status($id,$status){
 
-
-    public function update_status($id,$status){
-
-        $DB1 = $this->load->database('kingdom', TRUE);
-        if($status ==0){
-            $data["suspend"]=1;
-        }else{
-            $data["suspend"]=0;
-        }
-        $DB1->where('id', $id);
-        $DB1->update("payment",$data);
+    $DB1 = $this->load->database('kingdom', TRUE);
+    if($status ==0){
+        $data["suspend"]=1;
+    }else{
+        $data["suspend"]=0;
     }
+    $DB1->where('id', $id);
+    $DB1->update("payment",$data);
+}
+
+
+/***************************************************/
 
 }// END CLASS 
 ?>

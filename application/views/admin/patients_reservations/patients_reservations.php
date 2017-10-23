@@ -60,9 +60,9 @@ display:block!important;
     $out['notes']=$result['notes'];
     $out['patient_name']=$result['patient_name'];
     $out['tele']=$result['tele'];
-    
+   
     $out['readonly']='readonly="readonly"';
-    $out['input']='  <button name="UPDATE" value="UPDATE" type="submit" class="btn btn-primary">تعديل</button>';
+    $out['input']='  <button name="UPDATE"  id="button" value="UPDATE" type="submit" class="btn btn-primary">تعديل</button>';
  
   else:
   echo form_open_multipart('dashboard/patients_reservations');
@@ -75,7 +75,7 @@ display:block!important;
     $out['doctor_id']="";
     $out['notes']="";
     $out['readonly']="";
-    $out['input']='  <button name="ADD" value="ADD" type="submit" class="btn btn-primary">حفظ</button>';
+    $out['input']='  <button name="ADD" value="ADD" id="button" type="submit" class="btn btn-primary">حفظ</button>';
  
   endif;
  ?>
@@ -84,7 +84,7 @@ display:block!important;
 <div class="col-md-4 col-sm-6 col-xs-12">
 <div class="form-group">
   <label for="inputUser" class="control-label">تاريخ اليوم </label>
-  <input type="date" name="reservations_date" id="reservations_date" value="<?php echo $out['reservations_date']?>" class="form-control" />
+  <input type="date" name="reservations_date" id="reservations_date" onchange="return check($('#reservations_date').val())" value="<?php echo $out['reservations_date']?>" class="form-control" />
 </div>
 </div> 
 <div class="col-md-4 col-sm-6 col-xs-12">
@@ -157,25 +157,33 @@ display:block!important;
             <div class="panel-heading">
                 <h3 class="panel-title">حجوزات خلال اليوم  <?php echo date("Y-m-d",time()); ?></h3>
             </div>
+            <?php  if(isset($all_reservs_bydoc) && $all_reservs_bydoc !=null): ?>
             <div class="panel-body" style="height: 220px;overflow-y: scroll">
-                <?php if(!empty($all_reservs_bydoc)):?>
                <table class="table  table-striped table-bordered" style="margin-bottom: 0px;max-height: 220px;">
                    <thead>
                    <th>إسم الطبيب</th>
+                   <th>رقم الحجز</th>
                    <th>التوقيت</th>
                    </thead>
                    <tbody> <tr>
-                   <?php $a=1; foreach ($all_reservs_bydoc as $view):?>
+                   <?php
+                   
+                    $a=1; foreach ($all_reservs_bydoc as $view):?>
                        <td rowspan="<?php echo sizeof($view->all_img)?>"><?php echo $view->patient_name ;?></td>
                        <?php $a=1; foreach ($view->all_img as $row):?>
-                               <td> <?php echo date('h:i ',$row->reservations_time); ?></td>
+                              <td> <?php echo $row->id; ?></td>
+                               <td> <?php echo date('h:ia',$row->reservations_time); ?></td>
                                </tr>
                            <?php endforeach;?>
                    <?php endforeach;?>
                    </tbody>
                </table>
-                <?php endif;?>
             </div>
+            <?php else:
+            echo '<div class="alert alert-danger">
+  <strong>لا </strong>يوجد حججوزات  جلال اليوم .
+</div>';   
+            endif;?>
         </div>
     </div>
 
@@ -222,6 +230,7 @@ display:block!important;
                         
 <?php
 	if(isset($records) && $records!=null):
+
 ?>
   <table id="no-more-tables" class="table table-bordered" role="table">
         <caption class="text-right text-success"><i class="fa fa-table fa-fw"></i>الحجوزات خلال اليوم  <?php  echo date('Y/m/d'); ?> </p></caption>
@@ -243,7 +252,7 @@ display:block!important;
     <td><?php echo $row->patient_name ?></td>
     <td><?php echo $row->tele ?></td>
     <td><?php echo $row->patient_national_id?></td>
-    <td><?php echo date( "h:ia", $row->reservations_time)?></td>
+    <td><?php echo date( "h:i a", $row->reservations_time)?></td>
     
   <?php
   $query = $this->db->query('SELECT name FROM doctor WHERE id = '.$row->doctor_id);
@@ -254,7 +263,7 @@ foreach ($query->result() as $doc)
   ?>
         <td>
       <a href="<?php  echo base_url().'dashboard/update_patients_reservations/'.$row->id?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> تعديل</a>
-      <a  href="<?php  echo base_url().'dashboard/delete_reservations/'.$row->id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
+      <a  href="<?php echo base_url().'dashboard/delete_reservations/'.$row->id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
                 <i class="fa fa-trash"></i> حذف</a>
     </td>
     </tr>
@@ -295,7 +304,7 @@ foreach ($query->result() as $doc)
     <td><?php echo $rows->patient_name ?></td>
         <td><?php echo $rows->tele?></td>
     <td><?php echo $rows->patient_national_id?></td>
-    <td><?php echo date( "h:i a", $row->reservations_time)?></td>
+    <td><?php echo date( "h:i a", $rows->reservations_time)?></td>
       <?php
   $query = $this->db->query('SELECT name FROM doctor WHERE id = '.$rows->doctor_id);
 foreach ($query->result() as $doc)
@@ -305,7 +314,7 @@ foreach ($query->result() as $doc)
   ?>
     <td>
       <a href="<?php  echo base_url().'dashboard/update_patients_reservations/'.$rows->id?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> تعديل</a>
-      <a  href="<?php // echo base_url().'dashboard/delete_user_by_id/'.$user->user_id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
+      <a  href="<?php  echo base_url().'dashboard/delete_reservations/'.$rows->id?>" onclick="return confirm('هل انت متأكد من عملية الحذف ؟');" class="btn btn-danger btn-xs">
                 <i class="fa fa-trash"></i> حذف</a>
     </td>
     </tr>
@@ -325,13 +334,23 @@ foreach ($query->result() as $doc)
         </div>
         </div>
 
-
-
 <script>
+
+    function check(date){
+        var currentTime = new Date()
+        var month = currentTime.getMonth() + 1
+        var day = currentTime.getDate()
+        var year = currentTime.getFullYear()
+         var today =year + "-" + month  + "-" + day;
+        if(date <today){
+            alert("لابد ان يكون تاريخ الحجز بعد تاريخ اليوم !! ");
+            location.reload();
+        }
+    }
+
+
  function doc(dep_id){
-    
      var id = dep_id;
-    //    alert(id);
             var dataString = 'dep_id=' + id ;
             $.ajax({
                 type:'post',
@@ -346,9 +365,7 @@ foreach ($query->result() as $doc)
             return false;
  }
  function name_chek(nat_id){
-    
      var id = nat_id;
-    //    alert(id);
             var dataString = 'nat_id=' + id ;
             $.ajax({
                 type:'post',
@@ -363,9 +380,7 @@ foreach ($query->result() as $doc)
             return false;
  }
 function time_chek(reservations_time,doctor_id,reservations_date){
-    
             var dataString ='reservations_time='+reservations_time+"&doctor_id="+doctor_id+"&reservations_date="+reservations_date;
-    // alert(dataString);
             $.ajax({
                 type:'post',
                 url: '<?php echo base_url() ?>dashboard/load',

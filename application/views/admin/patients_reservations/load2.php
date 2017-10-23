@@ -33,10 +33,10 @@
     
     //-----------15-10-2017----------------------------------------------------------
     if($patient!=null  && !empty($patient)){
-        $phone =$patient[0]->tele;
+        $phone =$patient[0]->mobile;
     echo '<div class="form-group">
   <label for="inputUser" class="control-label">إسم المريض </label>
-  <input type="text"  value="'.$patient[0]->patient_name.'" class="form-control" readonly="readonly" />
+  <input type="text"  value="'.$patient[0]->a_name.'" class="form-control" readonly="readonly" />
 </div>';
         echo"<script > $('#tele').val('$phone'); document.getElementById('tele').readOnly = true;</script>";
    }else {
